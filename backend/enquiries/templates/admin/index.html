@@ -1,0 +1,24 @@
+{% extends "admin/index.html" %}
+{% load i18n static %}
+
+{% block content %}
+<div style="background: linear-gradient(135deg, #111 0%, #1a1a1a 100%); border: 1px solid rgba(200, 169, 122, 0.3); border-radius: 8px; padding: 22px 28px; margin-bottom: 24px;">
+  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 15px;">
+    <div>
+      <h2 style="font-family: 'Cinzel', serif; color: var(--rolex-gold); margin: 0 0 6px 0; font-size: 1.4rem; letter-spacing: 1px;">
+        Rolex Concierge & Boutique Management
+      </h2>
+      <p style="color: #9ca3af; margin: 0; font-size: 0.85rem; font-family: 'Montserrat', sans-serif;">
+        Real-time enquiry workflow, boutique allocation, and private appointment scheduling for Reference 126688.
+      </p>
+    </div>
+    <div>
+      <a href="{% url 'admin:enquiries-analytics-dashboard' %}" class="button" style="background: var(--rolex-gold) !important; color: #000 !important; font-weight: 700; padding: 10px 20px; font-size: 12px; letter-spacing: 1px; text-transform: uppercase;">
+        Open Full Analytics Dashboard →
+      </a>
+    </div>
+  </div>
+</div>
+
+{{ block.super }}
+{% endblock %}

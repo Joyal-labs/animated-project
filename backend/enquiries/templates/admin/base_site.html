@@ -1,0 +1,115 @@
+{% extends "admin/base.html" %}
+
+{% block title %}{% if subtitle %}{{ subtitle }} | {% endif %}{{ title }} | ROLEX CONCIERGE{% endblock %}
+
+{% block extrahead %}
+{{ block.super }}
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --rolex-gold: #C8A97A;
+    --rolex-gold-hover: #DFC298;
+    --rolex-green: #006039;
+    --rolex-dark: #0A0A0A;
+    --rolex-surface: #141414;
+    --rolex-border: rgba(200, 169, 122, 0.25);
+  }
+
+  #header {
+    background: linear-gradient(180deg, #0d0d0d 0%, #171717 100%) !important;
+    border-bottom: 2px solid var(--rolex-gold) !important;
+    color: #F5F5F5 !important;
+    padding: 12px 30px !important;
+  }
+
+  #branding h1 {
+    font-family: 'Cinzel', serif !important;
+    letter-spacing: 2px !important;
+    font-size: 1.15rem !important;
+    font-weight: 700 !important;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+
+  #branding h1 a:link, #branding h1 a:visited {
+    color: var(--rolex-gold) !important;
+    text-decoration: none !important;
+  }
+
+  .rolex-crown-icon {
+    display: inline-block;
+    width: 22px;
+    height: 18px;
+    fill: var(--rolex-gold);
+    vertical-align: middle;
+  }
+
+  .nav-dashboard-link {
+    background: rgba(200, 169, 122, 0.15);
+    border: 1px solid var(--rolex-gold);
+    color: var(--rolex-gold) !important;
+    padding: 5px 14px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-left: 20px;
+    transition: all 0.2s ease;
+    text-decoration: none !important;
+  }
+  .nav-dashboard-link:hover {
+    background: var(--rolex-gold);
+    color: #000 !important;
+  }
+
+  .breadcrumbs {
+    background: #111 !important;
+    border-bottom: 1px solid #222 !important;
+    font-size: 12px !important;
+  }
+
+  .module caption, .module h2 {
+    background: #1a1a1a !important;
+    color: var(--rolex-gold) !important;
+    font-family: 'Cinzel', serif !important;
+    letter-spacing: 1px !important;
+  }
+
+  .button, input[type=submit], input[type=button], .submit-row input, a.button {
+    background: #181818 !important;
+    border: 1px solid var(--rolex-gold) !important;
+    color: var(--rolex-gold) !important;
+    border-radius: 4px !important;
+    transition: all 0.2s ease !important;
+  }
+
+  .button.default, input[type=submit].default, .submit-row input.default {
+    background: var(--rolex-green) !important;
+    border-color: #00824e !important;
+    color: #fff !important;
+  }
+
+  .button:hover, input[type=submit]:hover, a.button:hover {
+    background: var(--rolex-gold) !important;
+    color: #000 !important;
+  }
+</style>
+{% endblock %}
+
+{% block branding %}
+<div id="branding">
+  <h1 id="site-name">
+    <svg class="rolex-crown-icon" viewBox="0 0 24 20">
+      <path d="M12 0L14.5 7.5L19 3L18 13H6L5 3L9.5 7.5L12 0ZM5 15H19V17H5V15Z"/>
+    </svg>
+    <a href="{% url 'admin:index' %}">ROLEX CONCIERGE</a>
+    <a href="{% url 'admin:enquiries-analytics-dashboard' %}" class="nav-dashboard-link">
+      ★ Luxury Analytics Dashboard
+    </a>
+  </h1>
+</div>
+{% endblock %}

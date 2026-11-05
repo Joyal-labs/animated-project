@@ -1,0 +1,17 @@
+{
+  "name": "animated-project",
+  "version": "1.0.0",
+  "description": "Yacht-Master II Interactive Animated Showcase",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "serve": "node server.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "dotenv": "^18.0.9"
+  }
+}

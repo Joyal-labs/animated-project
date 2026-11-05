@@ -1,0 +1,423 @@
+{% extends "admin/base_site.html" %}
+{% load i18n static %}
+
+{% block extrastyle %}
+{{ block.super }}
+<style>
+  .dashboard-wrapper {
+    max-width: 1400px;
+    margin: 20px auto;
+    padding: 0 15px;
+    font-family: 'Montserrat', sans-serif;
+    color: #e5e7eb;
+  }
+
+  .dash-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid var(--rolex-border);
+    padding-bottom: 18px;
+    margin-bottom: 25px;
+  }
+
+  .dash-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.6rem;
+    color: var(--rolex-gold);
+    margin: 0;
+    letter-spacing: 1.5px;
+  }
+
+  .dash-subtitle {
+    font-size: 0.85rem;
+    color: #9ca3af;
+    margin-top: 4px;
+    letter-spacing: 0.5px;
+  }
+
+  .dash-actions {
+    display: flex;
+    gap: 12px;
+  }
+
+  .btn-action {
+    background: #1c1c1c;
+    border: 1px solid var(--rolex-gold);
+    color: var(--rolex-gold);
+    padding: 8px 16px;
+    border-radius: 4px;
+    text-decoration: none;
+    font-size: 12px;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.2s ease;
+  }
+
+  .btn-action:hover {
+    background: var(--rolex-gold);
+    color: #000;
+  }
+
+  /* KPI Grid */
+  .kpi-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 30px;
+  }
+
+  .kpi-card {
+    background: #141414;
+    border: 1px solid rgba(200, 169, 122, 0.2);
+    border-radius: 6px;
+    padding: 18px 20px;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.2s ease, border-color 0.2s ease;
+  }
+
+  .kpi-card:hover {
+    transform: translateY(-2px);
+    border-color: var(--rolex-gold);
+  }
+
+  .kpi-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 4px;
+    height: 100%;
+    background: var(--rolex-gold);
+  }
+
+  .kpi-card--new::before { background: #D4AF37; }
+  .kpi-card--contacted::before { background: #60A5FA; }
+  .kpi-card--scheduled::before { background: #34D399; }
+  .kpi-card--completed::before { background: #9CA3AF; }
+  .kpi-card--cancelled::before { background: #F87171; }
+  .kpi-card--today::before { background: #F59E0B; }
+
+  .kpi-label {
+    font-size: 0.75rem;
+    text-transform: uppercase;
+    letter-spacing: 1.2px;
+    color: #9ca3af;
+    margin-bottom: 6px;
+  }
+
+  .kpi-value {
+    font-family: 'Cinzel', serif;
+    font-size: 1.9rem;
+    font-weight: 700;
+    color: #fff;
+    margin: 0;
+  }
+
+  /* Two Column Layout */
+  .dash-layout-grid {
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    gap: 24px;
+    margin-bottom: 30px;
+  }
+
+  @media (max-width: 1024px) {
+    .dash-layout-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+
+  .panel-box {
+    background: #141414;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 6px;
+    padding: 20px;
+  }
+
+  .panel-title {
+    font-family: 'Cinzel', serif;
+    font-size: 1.1rem;
+    color: var(--rolex-gold);
+    margin: 0 0 16px 0;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+    padding-bottom: 10px;
+  }
+
+  .panel-title a {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 0.75rem;
+    color: var(--rolex-gold);
+    text-decoration: underline;
+    font-weight: 500;
+  }
+
+  /* Luxury Table */
+  .luxury-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.85rem;
+  }
+
+  .luxury-table th {
+    text-align: left;
+    padding: 10px 12px;
+    background: #1c1c1c;
+    color: var(--rolex-gold);
+    font-size: 0.72rem;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    border-bottom: 1px solid rgba(200, 169, 122, 0.2);
+  }
+
+  .luxury-table td {
+    padding: 12px;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+    color: #d1d5db;
+  }
+
+  .luxury-table tr:hover td {
+    background: rgba(200, 169, 122, 0.04);
+  }
+
+  .badge {
+    padding: 3px 8px;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    color: #000;
+    display: inline-block;
+  }
+
+  .badge-new { background: #D4AF37; }
+  .badge-contacted { background: #60A5FA; }
+  .badge-scheduled { background: #34D399; }
+  .badge-completed { background: #9CA3AF; }
+  .badge-cancelled { background: #F87171; }
+
+  .bar-row {
+    margin-bottom: 14px;
+  }
+
+  .bar-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: 0.8rem;
+    margin-bottom: 5px;
+  }
+
+  .bar-track {
+    height: 6px;
+    background: #262626;
+    border-radius: 3px;
+    overflow: hidden;
+  }
+
+  .bar-fill {
+    height: 100%;
+    background: linear-gradient(90deg, #997843, var(--rolex-gold));
+    border-radius: 3px;
+  }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="dashboard-wrapper">
+
+  <div class="dash-header">
+    <div>
+      <h1 class="dash-title">Rolex Concierge Private Boutique Summary</h1>
+      <p class="dash-subtitle">Real-time status overview of consultation requests for Reference 126688</p>
+    </div>
+    <div class="dash-actions">
+      <a href="{% url 'admin:enquiries_enquiry_changelist' %}" class="btn-action">View All Enquiries</a>
+      <a href="{% url 'admin:enquiries_enquiry_add' %}" class="btn-action">+ New Manual Request</a>
+    </div>
+  </div>
+
+  <!-- Primary KPI Metric Cards -->
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Total Enquiries</div>
+      <div class="kpi-value">{{ total_enquiries }}</div>
+    </div>
+    <div class="kpi-card kpi-card--new">
+      <div class="kpi-label">New Enquiries</div>
+      <div class="kpi-value">{{ new_enquiries }}</div>
+    </div>
+    <div class="kpi-card kpi-card--contacted">
+      <div class="kpi-label">Contacted</div>
+      <div class="kpi-value">{{ contacted_enquiries }}</div>
+    </div>
+    <div class="kpi-card kpi-card--scheduled">
+      <div class="kpi-label">Appointment Scheduled</div>
+      <div class="kpi-value">{{ scheduled_enquiries }}</div>
+    </div>
+    <div class="kpi-card kpi-card--completed">
+      <div class="kpi-label">Completed</div>
+      <div class="kpi-value">{{ completed_enquiries }}</div>
+    </div>
+    <div class="kpi-card kpi-card--cancelled">
+      <div class="kpi-label">Cancelled</div>
+      <div class="kpi-value">{{ cancelled_enquiries }}</div>
+    </div>
+    <div class="kpi-card kpi-card--today">
+      <div class="kpi-label">Today's Enquiries</div>
+      <div class="kpi-value">{{ today_enquiries }}</div>
+    </div>
+  </div>
+
+  <!-- Main Content Grid -->
+  <div class="dash-layout-grid">
+
+    <!-- Recent Enquiries Section -->
+    <div class="panel-box">
+      <h3 class="panel-title">
+        <span>Recent Consultation Enquiries</span>
+        <a href="{% url 'admin:enquiries_enquiry_changelist' %}">View Full Table →</a>
+      </h3>
+
+      {% if recent_enquiries %}
+      <table class="luxury-table">
+        <thead>
+          <tr>
+            <th>Ref</th>
+            <th>Client Name</th>
+            <th>Boutique Location</th>
+            <th>Purpose</th>
+            <th>Preferred Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for enq in recent_enquiries %}
+          <tr>
+            <td>
+              <a href="{% url 'admin:enquiries_enquiry_change' enq.id %}" style="color: var(--rolex-gold); font-weight: 600; text-decoration: none;">
+                #{{ enq.id }}
+              </a>
+            </td>
+            <td>
+              <strong>{{ enq.full_name }}</strong><br>
+              <small style="color: #9ca3af;">{{ enq.email }}</small>
+            </td>
+            <td>{{ enq.jeweller_location.city }} — {{ enq.jeweller_location.name }}</td>
+            <td>{{ enq.consultation_purpose.name|default:"Private Viewing" }}</td>
+            <td>
+              {% if enq.preferred_date %}
+                {{ enq.preferred_date|date:"d M Y" }}
+              {% else %}
+                <span style="color: #6b7280;">Flexible</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if enq.status == 'New' %}
+                <span class="badge badge-new">New</span>
+              {% elif enq.status == 'Contacted' %}
+                <span class="badge badge-contacted">Contacted</span>
+              {% elif enq.status == 'Appointment Scheduled' %}
+                <span class="badge badge-scheduled">Scheduled</span>
+              {% elif enq.status == 'Completed' %}
+                <span class="badge badge-completed">Completed</span>
+              {% elif enq.status == 'Cancelled' %}
+                <span class="badge badge-cancelled">Cancelled</span>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+      {% else %}
+        <p style="color: #9ca3af; font-size: 0.9rem;">No consultation enquiries recorded yet.</p>
+      {% endif %}
+    </div>
+
+    <!-- Right Column: Breakdown Panels -->
+    <div>
+
+      <!-- Upcoming Appointments -->
+      <div class="panel-box" style="margin-bottom: 24px;">
+        <h3 class="panel-title">Upcoming Preferred Dates</h3>
+        {% if upcoming_appointments %}
+        <table class="luxury-table">
+          <thead>
+            <tr>
+              <th>Client</th>
+              <th>Date</th>
+              <th>Status</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for appt in upcoming_appointments %}
+            <tr>
+              <td>
+                <a href="{% url 'admin:enquiries_enquiry_change' appt.id %}" style="color: #f3f4f6; text-decoration: none;">
+                  {{ appt.full_name }}
+                </a>
+              </td>
+              <td style="color: var(--rolex-gold); font-weight: 600;">
+                {{ appt.preferred_date|date:"D, d M" }}
+              </td>
+              <td>
+                <span class="badge {% if appt.status == 'New' %}badge-new{% elif appt.status == 'Appointment Scheduled' %}badge-scheduled{% else %}badge-contacted{% endif %}">
+                  {{ appt.status }}
+                </span>
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        {% else %}
+          <p style="color: #9ca3af; font-size: 0.85rem;">No upcoming appointment dates currently requested.</p>
+        {% endif %}
+      </div>
+
+      <!-- Enquiries Grouped by Jeweller Location -->
+      <div class="panel-box" style="margin-bottom: 24px;">
+        <h3 class="panel-title">By Jeweller Location</h3>
+        {% for loc in location_breakdown %}
+        <div class="bar-row">
+          <div class="bar-info">
+            <span>{{ loc.city }} — {{ loc.name }}</span>
+            <strong style="color: var(--rolex-gold);">{{ loc.enquiry_count }}</strong>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: {% widthratio loc.enquiry_count total_enquiries 100 %}%;"></div>
+          </div>
+        </div>
+        {% empty %}
+          <p style="color: #9ca3af; font-size: 0.85rem;">No location enquiries recorded yet.</p>
+        {% endfor %}
+      </div>
+
+      <!-- Enquiries Grouped by Consultation Purpose -->
+      <div class="panel-box">
+        <h3 class="panel-title">By Consultation Purpose</h3>
+        {% for purp in purpose_breakdown %}
+        <div class="bar-row">
+          <div class="bar-info">
+            <span>{{ purp.name }}</span>
+            <strong style="color: var(--rolex-gold);">{{ purp.enquiry_count }}</strong>
+          </div>
+          <div class="bar-track">
+            <div class="bar-fill" style="width: {% widthratio purp.enquiry_count total_enquiries 100 %}%;"></div>
+          </div>
+        </div>
+        {% empty %}
+          <p style="color: #9ca3af; font-size: 0.85rem;">No purpose enquiries recorded yet.</p>
+        {% endfor %}
+      </div>
+
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
