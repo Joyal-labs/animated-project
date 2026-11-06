@@ -28,6 +28,39 @@ const server = http.createServer((req, res) => {
   if (reqPath === '/' || reqPath === '') {
     reqPath = '/index.html';
   }
+  // Handle Web3Forms appointment submissions securely
+  if (req.method === 'POST' && reqPath === '/api/submit-consultation') {
+    let body = '';
+    req.on('data', chunk => { body += chunk.toString(); });
+    req.on('end', async () => {
+      try {
+        const parsed = JSON.parse(body || '{}');
+        const payload = {
+          ...parsed,
+          access_key: process.env.WEB3FORMS_ACCESS_KEY,
+          subject: 'New Rolex Boutique Consultation Request'
+        };
+
+        const forwardRes = await fetch('https://api.web3forms.com/submit', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(payload)
+        });
+
+        const data = await forwardRes.json();
+        res.writeHead(forwardRes.status, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify(data));
+      } catch (err) {
+        console.error('Submit proxy error:', err);
+        res.writeHead(500, { 'Content-Type': 'application/json' });
+        res.end(JSON.stringify({ success: false, message: 'Server proxy error' }));
+      }
+    });
+    return;
+  }
 
   // Proxy /api/ requests to Django backend on port 8000
   if (reqPath.startsWith('/api/')) {

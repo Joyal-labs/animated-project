@@ -1,5 +1,6 @@
 node_modules/
 .env
+.vercel
 backend/.venv/
 backend/**/__pycache__/
 backend/db.sqlite3

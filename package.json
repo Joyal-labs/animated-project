@@ -4,6 +4,7 @@
   "description": "Yacht-Master II Interactive Animated Showcase",
   "main": "server.js",
   "scripts": {
+    "build": "echo 'Static build ready'",
     "dev": "node server.js",
     "start": "node server.js",
     "serve": "node server.js"
