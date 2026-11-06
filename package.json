@@ -4,7 +4,7 @@
   "description": "Yacht-Master II Interactive Animated Showcase",
   "main": "server.js",
   "scripts": {
-    "build": "echo 'Static build ready'",
+    "build": "node -e \"const fs = require('fs'); if (!fs.existsSync('public')) fs.mkdirSync('public'); fs.copyFileSync('index.html', 'public/index.html'); fs.copyFileSync('style.css', 'public/style.css'); fs.copyFileSync('main.js', 'public/main.js'); console.log('Build completed');\"",
     "dev": "node server.js",
     "start": "node server.js",
     "serve": "node server.js"

@@ -1,14 +1,14 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
-  "cleanUrls": true,
+  "outputDirectory": ".",
   "rewrites": [
-    { "source": "/api/config/(.*)", "destination": "/api/config" },
+    { "source": "/api/config/:match*", "destination": "/api/config" },
     { "source": "/api/config", "destination": "/api/config" },
-    { "source": "/api/jeweller-locations/(.*)", "destination": "/api/jeweller-locations" },
+    { "source": "/api/jeweller-locations/:match*", "destination": "/api/jeweller-locations" },
     { "source": "/api/jeweller-locations", "destination": "/api/jeweller-locations" },
-    { "source": "/api/consultation-purposes/(.*)", "destination": "/api/consultation-purposes" },
+    { "source": "/api/consultation-purposes/:match*", "destination": "/api/consultation-purposes" },
     { "source": "/api/consultation-purposes", "destination": "/api/consultation-purposes" },
-    { "source": "/api/enquiries/(.*)", "destination": "/api/enquiries" },
+    { "source": "/api/enquiries/:match*", "destination": "/api/enquiries" },
     { "source": "/api/enquiries", "destination": "/api/enquiries" }
   ]
 }
